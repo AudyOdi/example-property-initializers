@@ -5,20 +5,17 @@ import { ListItem, Icon } from 'react-native-elements';
 import defaultProfilePicture from './default-profile-pic.png';
 
 export default class List extends React.Component {
-  constructor() {
-    super(...arguments);
-    this.state = {
-      list: this.props.list,
-      searchInput: '',
-    };
-    this._handleInputChanges = this._handleInputChanges.bind(this);
-    this._filterList = this._filterList.bind(this);
-  }
+  state = {
+    list: this.props.list,
+    searchInput: '',
+  };
+
   componentWillUnmount() {
     this._filterTimeout && clearTimeout(this._filterTimeout);
   }
+
   render() {
-    let { searchInput } = this.state;
+    let { searchInput, list } = this.state;
     return (
       <View style={{ flex: 1 }}>
         <View style={styles.searchContainer}>
@@ -32,7 +29,7 @@ export default class List extends React.Component {
           <Icon name="search" size={26} color="#476DC5" />
         </View>
         <ScrollView>
-          {this.state.list.map((name, index) => {
+          {list.map((name, index) => {
             return (
               <ListItem
                 key={index} // please pardon this one
@@ -47,7 +44,7 @@ export default class List extends React.Component {
     );
   }
 
-  _handleInputChanges(searchInput: string) {
+  _handleInputChanges = searchInput => {
     this.setState({ searchInput });
 
     if (this._filterTimeout) {
@@ -55,15 +52,15 @@ export default class List extends React.Component {
     }
 
     this._filterTimeout = setTimeout(this._filterList, 400);
-  }
+  };
 
-  _filterList() {
+  _filterList = () => {
     let filterText = this.state.searchInput.toLowerCase();
     let { list } = this.props;
     this.setState({
       list: list.filter(name => name.toLowerCase().includes(filterText)),
     });
-  }
+  };
 }
 
 const styles = StyleSheet.create({
