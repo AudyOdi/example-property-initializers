@@ -4,17 +4,21 @@ import { ListItem, Icon } from 'react-native-elements';
 
 import defaultProfilePicture from './default-profile-pic.png';
 
+let filterList = (list, filterText) => {
+  let lowerCasedFilterText = filterText.toLowerCase();
+  return list.filter(name => name.toLowerCase().includes(lowerCasedFilterText));
+};
 export default class List extends React.Component {
   state = {
-    list: this.props.list,
-    searchInput: '',
+    list: filterList(this.props.list, 'Al'),
+    searchInput: 'Al',
   };
 
   componentWillUnmount() {
     this._filterTimeout && clearTimeout(this._filterTimeout);
   }
 
-  render() {
+  render = () => {
     let { searchInput, list } = this.state;
     return (
       <View style={{ flex: 1 }}>
@@ -42,7 +46,7 @@ export default class List extends React.Component {
         </ScrollView>
       </View>
     );
-  }
+  };
 
   _handleInputChanges = searchInput => {
     this.setState({ searchInput });
@@ -55,10 +59,8 @@ export default class List extends React.Component {
   };
 
   _filterList = () => {
-    let filterText = this.state.searchInput.toLowerCase();
-    let { list } = this.props;
     this.setState({
-      list: list.filter(name => name.toLowerCase().includes(filterText)),
+      list: filterList(this.props.list, this.state.searchInput),
     });
   };
 }
